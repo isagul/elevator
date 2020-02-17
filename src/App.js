@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.scss';
 
 function App() {
+  const [floorInfo, setFloorInfo] = useState(6);
+  const [elevatorDirection, setElevatorDirection] = useState('Aşağı');
+
   return (
     <div className="app">
       <div className="elevator-buttons-area">
         <div className="floor-info-area">
-          <p class="floor-info">Kat Bilgisi</p>
+          <p class="floor-info">{floorInfo}. Kat</p>
+          <p class="elevator-direction-info">Yön: {elevatorDirection}</p>
         </div>
         <div className="elevator-buttons">
           <div className="outer">
@@ -110,10 +114,10 @@ function App() {
             <div className="door"></div>
             <div className="door"></div>
           </div>
-          <div className="home"></div>
         </div>
         <div className="elevator">
-
+          <div class="elevator-door"></div>
+          <div class="elevator-light"></div>
         </div>
       </div>
     </div>

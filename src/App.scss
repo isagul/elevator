@@ -1,5 +1,4 @@
 .app {
-  border: 1px solid black;
   width: 500px;
   height:550px;
   display: flex;
@@ -7,8 +6,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 4rem;
-  margin-top: 3rem;
-
+  margin: 3rem auto 0 auto;
   
   .elevator-buttons-area {
     .floor-info-area {
@@ -16,15 +14,18 @@
       border:10px solid black;
       border-radius: 10px;
       background-color: #01FF00;
-      height:60px;
+      height:50px;
       margin-bottom: 1rem;
       background-size: 10px 10px;
       background-image:
       linear-gradient(to right, #00E500 2px, transparent 1px),
       linear-gradient(to bottom, #00E500 2px, transparent 1px);
       padding: 10px;
-      .floor-info {
+      p {
         margin: 0;
+        font-weight: 600;
+      }
+      .floor-info, .elevator-direction-info {
         font-size: 18px;
       }
     }
@@ -43,6 +44,7 @@
           border-radius: 50%;
           border: 3px solid lightgray;
           font-size: 16px;
+          outline: none;
           &:hover {
             cursor: pointer;
             border-color: #01FF00;
@@ -54,7 +56,7 @@
 
   .building {
     width: 250px;
-    height: 465px;
+    height: auto;
     background-color: #40E0D0;
     display: flex;
     flex-direction: column;
@@ -67,7 +69,7 @@
       margin-bottom: 1rem;  
       .home {
         background-color: #B2AD79;
-        height: 50px;
+        height: 65px;
         width: 80px;
         display: flex;
         justify-content: center;
@@ -95,7 +97,47 @@
       }
     }
     .elevator {
+        position: absolute;
+        height: 50px;
+        left: 41%;
+        width: 40px;
+        background-color: white;
+        border: 3px solid black;
+        border-top-width: 12px;
+        .elevator-door {
+          width: 100%;
+          height: 100%;
+          right: 0;
+          position: relative;
+          // background: silver;
+          background: radial-gradient(
+              center,
+              circle,
+              rgba(255, 255, 255, 0.35),
+              rgba(255, 255, 255, 0) 20%,
+              rgba(255, 255, 255, 0) 21%
+            ),
+            radial-gradient(
+              center,
+              circle,
+              rgba(0, 0, 0, 0.2),
+              rgba(0, 0, 0, 0) 20%,
+              rgba(0, 0, 0, 0) 21%
+            ),
+            radial-gradient(center, circle farthest-corner, grey, lighten(gray, 4%));
+          background-size: 7px 7px, 7px 7px, 100% 100%;
+          background-position: 1px 1px, 0px 0px, center center;
+        }
 
+        .elevator-light {
+          position: absolute;
+          top: -10px;
+          left: calc(50% - 3px);
+          border-radius: 50%;
+          width: 8px;
+          height: 8px;
+          background: lime;
+        }
     }
 
     &:after {
