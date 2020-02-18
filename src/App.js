@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
 import './App.scss';
 
+let pressedFloors = [];
+
 function App() {
   const [floorInfo, setFloorInfo] = useState({value: 6, label: '6'});
   const [elevatorDirection, setElevatorDirection] = useState('');
-  const [pressedFloors, setPressedFloors] = useState([]);
+  const [isMoveElevator, setIsMoveElevator]= useState(false);
+  // const [pressedFloors, setPressedFloors] = useState([]);
   // let pressedFloors = [];
-  const elevatorArriveTime = 1000;
+  // const elevatorArriveTime = 1000;
 
   const elevatorButtons = () => {
     let floors = [
@@ -28,31 +31,42 @@ function App() {
   }
 
   const closeDoorElevator = (e) => {
+    setIsMoveElevator(true);
     let elevator = document.getElementById('elevator');    
-    elevator.classList.add('close-door');
 
-    let clickedButton = document.getElementById(`button-${e.value}`);
-    clickedButton.classList.add('active-button')
+  
+    return new Promise(resolve => {
+      elevator.classList.add('close-door');
+      pressedFloors.forEach(floor => {
+        let clickedButton = document.getElementById(`button-${floor.value}`);
+        clickedButton.classList.add('active-button');
+      })
+      setTimeout(() => {
+        resolve(true);
+      }, 1000)
+    })
+    
   }
 
   function openDoorElevator(e){
+    setIsMoveElevator(false);
     let elevator = document.getElementById('elevator');
-    elevator.classList.remove('close-door');
-
     let clickedButton = document.getElementById(`button-${e.value}`);
-    clickedButton.classList.remove('active-button')
+    return new Promise(resolve => {
+      elevator.classList.remove('close-door');  
+      clickedButton.classList.remove('active-button');
+      pressedFloors = [];
+      resolve(true);
+    },1000)
   }
 
-  function pressedButton(e){
-    closeDoorElevator(e);
-    setPressedFloors(prevFloors => [...prevFloors, e])
-    setTimeout(() => {
-      const {value} = e;
-      /*setPressedFloors(prevFloors => [...prevFloors, value])
-      console.log('pressed floors', pressedFloors);*/
-      let elevator = document.getElementById('elevator');
-      let floor = document.getElementById(`floor-${value}`);
+  function moveElevator(e){
+    const {value} = e;
+    let elevator = document.getElementById('elevator');
 
+    let floor = document.getElementById(`floor-${value}`);
+
+    return new Promise(resolve => {
       if (value > floorInfo.value) {
         setElevatorDirection('Yukarı')
         for (let i = elevator.offsetTop; i >= floor.offsetTop; i--) {
@@ -64,13 +78,29 @@ function App() {
           elevator.style.top = i + 'px'
         }
       }
-    }, elevatorArriveTime)
-    setTimeout(() => {
-      openDoorElevator(e);
-      setFloorInfo(e);
+      setTimeout(() => {
+        resolve(true);
+      }, 1500)
+    });
+  }
 
-    },elevatorArriveTime + 1000)
+  async function pressedButton(e){
+    pressedFloors.push(e);
     
+    let promise = Promise.resolve();
+    pressedFloors.forEach(floor => {
+      promise = promise.then(async () => {
+        setFloorInfo(floor);
+        await closeDoorElevator(floor)
+        await moveElevator(floor)
+        await openDoorElevator(floor);
+        return new Promise(res => {
+          setTimeout(res, 1000);
+        })
+      })
+      
+    })
+
   }
 
   return (
@@ -165,7 +195,7 @@ function App() {
         </div>
         <div className="elevator" id="elevator">
           <div className="elevator-door"></div>
-          <div className="elevator-light"></div>
+          <div className="elevator-light" style={{background: isMoveElevator ? 'red' : 'lime'}}></div>
         </div>
       </div>
     </div>

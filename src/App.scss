@@ -1,28 +1,28 @@
 .app {
-  width: 500px;
-  height:550px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 4rem;
-  margin: 3rem auto 0 auto;
+  height: 100vh;
+  // margin: 3rem auto 0 auto;
   font-family: 'Roboto', sans-serif;
+  padding: 10px;
 
   
   .elevator-buttons-area {
+    margin-right: 1rem;
     .floor-info-area {
       width:150px;
       border:10px solid black;
       border-radius: 10px;
       background-color: #01FF00;
-      height:50px;
+      height:40px;
       margin-bottom: 1rem;
       background-size: 10px 10px;
       background-image:
       linear-gradient(to right, #00E500 2px, transparent 1px),
       linear-gradient(to bottom, #00E500 2px, transparent 1px);
-      padding: 10px;
+      padding: 5px;
       p {
         margin: 0;
         font-weight: 600;
@@ -48,6 +48,9 @@
           border: 3px solid lightgray;
           font-size: 20px;
           outline: none;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           &:hover {
             cursor: pointer;
           }
@@ -131,7 +134,6 @@
           border-radius: 50%;
           width: 8px;
           height: 8px;
-          background: lime;
         }
     }
 
@@ -165,4 +167,26 @@
   background:lime;
   box-shadow: 1px 1px 5px 3px green;
   color: white;
+}
+
+@media screen and (max-width: 414px) {
+  .app .elevator-buttons-area .floor-info-area {
+    width: 100px;
+  }
+  .app .building .floor .home {
+    width: 60px;
+  }
+  .app .building {
+    width: 200px;
+  }
+  .app .building:after {
+    width:210px;
+    left: -6px;
+  }
+  .app .building:before {
+    border-width: 0 100px 50px 100px;
+  }
+  .app .building .elevator {
+    left: 38%;
+  }
 }
