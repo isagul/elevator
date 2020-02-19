@@ -1,3 +1,5 @@
+@import './styles/variables.scss';
+
 .app {
   display: flex;
   flex-direction: row;
@@ -6,7 +8,6 @@
   height: 100vh;
   // margin: 3rem auto 0 auto;
   font-family: 'Roboto', sans-serif;
-  padding: 10px;
 
   
   .elevator-buttons-area {
@@ -31,7 +32,7 @@
         font-weight: 600;
       }
       .floor-info, .elevator-direction-info {
-        font-size: 18px;
+        font-size: 18px;        
       }
     }
     .elevator-buttons {
@@ -57,7 +58,7 @@
           &:hover {
             cursor: pointer;
           }
-          &:active, &.active {
+          &:active {
             background:lime;
             box-shadow: 1px 1px 5px 3px green;
             color: white;
@@ -73,7 +74,7 @@
   .building {
     width: 250px;
     height: auto;
-    background-color: #40E0D0;
+    background-color: $building-color;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -84,7 +85,7 @@
       justify-content: space-between;    
       margin-bottom: 1rem;  
       .home {
-        background-color: #B2AD79;
+        background-color: $home-color;
         height: 65px;
         width: 80px;
         display: flex;
@@ -93,7 +94,7 @@
         .room {
           height:30px;
           width:30px;
-          background-color: #DAA520;
+          background-color: $room-color;
           border:2px solid #B8860A;
         }
         .door {
@@ -119,7 +120,7 @@
         width: 40px;
         border: 3px solid black;
         border-top-width: 12px;
-        background: linear-gradient(to right, #C0C0C0 50%, white 50%);
+        background: linear-gradient(to right, $elevator-door-color 50%, $elevator-bg-color 50%);
         background-size: 200% 100%;
         background-position:right bottom;
         transition:all 1s ease;
@@ -157,7 +158,34 @@
       height: 0;
       border-style: solid;
       border-width: 0 125px 50px 125px;;
-      border-color: transparent transparent #A34B37 transparent;
+      border-color: transparent transparent $roof-color transparent;
+    }
+  }
+
+  .github-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25px;
+    width: 175px;
+    position: fixed;
+    background-color: black;
+    cursor: pointer;
+    left:-40px;
+    top: 30px;
+    font-size: 13px;
+    cursor: pointer;
+    transform: rotate(-40deg);
+    transition: all 0.1s;
+    a {
+      color: white;
+      text-decoration: none;
+    }
+    svg {
+      margin-right: 3px;
+    }
+    &:hover {
+      transform: rotate(-40deg) scale(1.1);
     }
   }
 }
@@ -180,6 +208,7 @@
         width: 100px;
         .floor-info, .elevator-direction-info {
           font-size: 14px;
+          font-weight: normal;
         }        
       }
     }

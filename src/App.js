@@ -16,7 +16,7 @@ function App() {
       { value: 4, label: '4' },
       { value: 1, label: '1' },
       { value: 2, label: '2' },
-      { value: 0, label: 'Z' }
+      { value: 0, label: 'G' }
     ];
     return floors.map((floor, index) => {
       return (
@@ -84,12 +84,12 @@ function App() {
 
     return new Promise(resolve => {
       if (value > floorInfo.value) {
-        setElevatorDirection('Yukarı')
+        setElevatorDirection('Up')
         for (let i = elevator.offsetTop; i >= floor.offsetTop; i--) {
           elevator.style.top = i + 'px'
         }
       } else if (value < floorInfo.value) {
-        setElevatorDirection('Aşağı')
+        setElevatorDirection('Down')
         for (let i = elevator.offsetTop; i <= floor.offsetTop; i++) {
           elevator.style.top = i + 'px'
         }
@@ -134,8 +134,8 @@ function App() {
     <div className="app">
       <div className="elevator-buttons-area">
         <div className="floor-info-area">
-          <p className="floor-info">{floorInfo.label}. Kat</p>
-          <p className="elevator-direction-info">Yön: {elevatorDirection}</p>
+          <p className="floor-info">Floor {floorInfo.label}</p>
+          <p className="elevator-direction-info">Direction: {elevatorDirection}</p>
         </div>
         <div className="elevator-buttons">
           {elevatorButtons()}
@@ -153,6 +153,11 @@ function App() {
           <div className="elevator-door"></div>
           <div className="elevator-light" style={{ background: isMoveElevator ? 'red' : 'lime' }}></div>
         </div>
+      </div>
+      <div className="github-area">
+        <a href="https://github.com/isagul/elevator" target="_blank" rel="noopener noreferrer">
+          <p><i className="fab fa-github"></i>View On Github</p>
+        </a>
       </div>
     </div>
   );
