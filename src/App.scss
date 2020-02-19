@@ -12,11 +12,14 @@
   .elevator-buttons-area {
     margin-right: 1rem;
     .floor-info-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       width:150px;
       border:10px solid black;
       border-radius: 10px;
       background-color: #01FF00;
-      height:40px;
+      height:42px;
       margin-bottom: 1rem;
       background-size: 10px 10px;
       background-image:
@@ -50,7 +53,7 @@
           outline: none;
           display: flex;
           justify-content: center;
-          align-items: center;
+          align-items: center;    
           &:hover {
             cursor: pointer;
           }
@@ -170,23 +173,33 @@
 }
 
 @media screen and (max-width: 414px) {
-  .app .elevator-buttons-area .floor-info-area {
-    width: 100px;
-  }
-  .app .building .floor .home {
-    width: 60px;
-  }
-  .app .building {
-    width: 200px;
-  }
-  .app .building:after {
-    width:210px;
-    left: -6px;
-  }
-  .app .building:before {
-    border-width: 0 100px 50px 100px;
-  }
-  .app .building .elevator {
-    left: 38%;
+  .app {
+    padding-top: 2rem;
+    .elevator-buttons-area {
+      .floor-info-area {
+        width: 100px;
+        .floor-info, .elevator-direction-info {
+          font-size: 14px;
+        }        
+      }
+    }
+    .building {
+      width: 200px;
+      .floor {
+        .home {
+          width: 60px;
+        }
+      }
+      &:after {
+        width:210px;
+        left: -6px;
+      }
+      &:before {
+        border-width: 0 100px 50px 100px;
+      }
+      .elevator {
+        left: 38%;
+      }
+    }
   }
 }
