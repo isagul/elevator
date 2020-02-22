@@ -1,12 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.scss';
 
 let pressedFloors = [];
+let floors = [];
+let elevator;
+const toggleDoorTime = 1000;
+const arrivingTime = 2000;
+const elevatorWaitTime = 2000;
 
 function App() {
   const [floorInfo, setFloorInfo] = useState({ value: 6, label: '6' });
   const [elevatorDirection, setElevatorDirection] = useState('');
   const [isMoveElevator, setIsMoveElevator] = useState(false);
+
+  useEffect(() => {
+    floors = document.querySelectorAll('.floor');
+    elevator = document.querySelector('.elevator');
+    elevator.style.transition = `background-position ${toggleDoorTime}ms`;
+  }, [])
+
+  useEffect(() => {
+    let promise = Promise.resolve();
+    pressedFloors.forEach(floor => {
+      promise = promise.then(async () => {
+        setFloorInfo(floor);
+        await closeDoorElevator(floor);
+        await moveElevator(floor);
+        await openDoorElevator(floor);
+        let idx = pressedFloors.findIndex(item => item.value === floor.value);
+        pressedFloors.splice(idx, 1);
+
+        return new Promise(res => {
+          setTimeout(res, arrivingTime);
+        })
+      })
+    })
+    /*promise.then(() => {
+      setTimeout(() => {
+
+      }, elevatorWaitTime)
+    })*/
+  }, [isMoveElevator])
 
   function elevatorButtons() {
     let floors = [
@@ -43,20 +77,15 @@ function App() {
     })
   }
 
-  const closeDoorElevator = (e) => {
+  const closeDoorElevator = () => {
     let elevator = document.getElementById('elevator');
 
     return new Promise(resolve => {
-      elevator.classList.add('close-door');
-
-      pressedFloors.forEach(floor => {
-        let clickedButton = document.getElementById(`button-${floor.value}`);
-        clickedButton.classList.add('active-button');
-      })
+      elevator.classList.add('close-door');      
       
       setTimeout(() => {
         resolve(true);
-      }, 1000)
+      }, elevatorWaitTime)
     })
 
   }
@@ -68,66 +97,54 @@ function App() {
     return new Promise(resolve => {
       elevator.classList.remove('close-door');
       clickedButton.classList.remove('active-button');
+      setIsMoveElevator(false)   
 
-      setTimeout(() => {
+      setTimeout(() => {     
         resolve(true);
-      }, 500)
+      }, elevatorWaitTime)
     })
   }
 
-  function moveElevator(e) {
-    setIsMoveElevator(true);
-    const { value } = e;
+  function moveElevator({value}) {
     let elevator = document.getElementById('elevator');
+    elevator.style.transition = `top ${arrivingTime}ms`
+    let targetFloor = document.querySelector(`#floor-${value}`)
 
-    let floor = document.getElementById(`floor-${value}`);
-
+    
     return new Promise(resolve => {
-      if (value > floorInfo.value) {
-        setElevatorDirection('Up')
-        for (let i = elevator.offsetTop; i >= floor.offsetTop; i--) {
-          elevator.style.top = i + 'px'
-        }
-      } else if (value < floorInfo.value) {
-        setElevatorDirection('Down')
-        for (let i = elevator.offsetTop; i <= floor.offsetTop; i++) {
-          elevator.style.top = i + 'px'
+      for (let i = 0; i < floors.length; i++) {
+        if (elevator.offsetTop > floors[i].offsetTop) {
+          setElevatorDirection('Up')
+          for (let i = elevator.offsetTop; i >= targetFloor.offsetTop; i--) {          
+            elevator.style.top = i + 'px'
+          }
+        } else if (elevator.offsetTop < floors[i].offsetTop) {
+          setElevatorDirection('Down')
+          for (let i = elevator.offsetTop; i <= targetFloor.offsetTop; i++) {
+            elevator.style.top = i + 'px'
+          }
         }
       }
       setTimeout(() => {
+        elevator.style.transition = `background-position ${toggleDoorTime}ms`;
         resolve(true);
-        setIsMoveElevator(false);
-      }, 2000)
+      }, arrivingTime)
     });
   }
 
-  async function pressedButton(e) {
-    if (!isMoveElevator) {
-      let idx = pressedFloors.findIndex(item => item.value === e.value);
-      if (idx === -1) {
-        pressedFloors.push(e);
-      }
-
-      let promise = Promise.resolve();
-      pressedFloors.forEach(floor => {
-        promise = promise.then(async () => {
-          setFloorInfo(floor);
-          await closeDoorElevator(floor)
-          await moveElevator(floor)
-          await openDoorElevator(floor);
-          let idx = pressedFloors.findIndex(item => item.value === floor.value);
-          pressedFloors.splice(idx, 1);
-
-          return new Promise(res => {
-            setTimeout(res, 1000);
-          })
-        })
-      })
-      /*promise.then(() => {
-        
-      })*/
+  function pressedButton(e) {
+    let idx = pressedFloors.findIndex(item => item.value === e.value);
+    if (idx === -1) {
+      pressedFloors.push(e);
     }
 
+    pressedFloors.forEach(floor => {
+      let clickedButton = document.getElementById(`button-${floor.value}`);
+      clickedButton.classList.add('active-button');
+    })
+    
+    setIsMoveElevator(true);
+    
   }
 
   return (
@@ -135,7 +152,9 @@ function App() {
       <div className="elevator-buttons-area">
         <div className="floor-info-area">
           <p className="floor-info">Floor {floorInfo.label}</p>
-          <p className="elevator-direction-info">Direction: {elevatorDirection}</p>
+          {
+            isMoveElevator && <p className="elevator-direction-info">Direction: {elevatorDirection}</p>
+          }
         </div>
         <div className="elevator-buttons">
           {elevatorButtons()}
